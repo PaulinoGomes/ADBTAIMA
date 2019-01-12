@@ -1,0 +1,176 @@
+<ion-view title="PLAY" id="page2" style="background-color:#000000;">
+  <ion-content padding="true" class="has-header">
+    <div class="list card manual-card-fullwidth" id="pLAY-card21">
+      <ion-item class="item-icon-left assertive" id="pLAY-list-item4">
+        <i class="icon ion-music-note">
+          <div id="album">
+           <span>Música: </label><label id="musica_titulo"></label>
+        </div>
+
+        </i>Ouça a Rádio ADB TAIMA</ion-item>
+      <div class=" item item-image" id="musica_capa">
+        <img src="img/logomarca.png" style="display: block; width: 65%; height: 65%; margin-left: auto; margin-right: auto;">
+      </div>
+      <form id="pLAY-form4" class="list">
+        <div class="spacer" style="width: 320px; height: 0px;"></div>
+
+       <style type="text/css">
+           div#controle_volume {
+                width: 90%!important;
+                text-align: center;
+                margin: 30px 0px 30px 7px;
+            }
+            ion-item#pLAY-range3 {
+                border-radius: 20px;
+            }
+            img#btn_play_pause {
+                height: 60px;
+                width: 60px;
+                margin-left: 10px;
+            }
+       </style>
+<div id="controles_volume">
+  <div id="controle_volume" style="width:90px; height:7px">
+        <ion-item class=" ui-slider-handle range range-positive" id="pLAY-range3">
+          <input  type="range" value="80" min="0" max="100" step="1">
+        </ion-item>
+    <!--div id="custom-handle" class="ui-slider-handle"></div-->
+  </div>
+</div>
+  <script type="text/javascript">
+// Volume Inicial player HTML5
+document.getElementById("player_html5").volume=1.0;
+// Slider controle de volume jquery
+$( function() {
+    var handle = $( "#custom-handle" );
+$('#controle_volume').slider({
+    value: 1.0,
+  range: "min",
+    min: 0,
+    max: 1,
+    step: .1,
+    slide: function(event, ui) {
+    document.getElementById("player_html5").muted = false;
+        document.getElementById("player_html5").volume = ui.value;
+    volume_atual = ui.value * 100;
+    volume_atual = volume_atual+"%";
+    handle.text( volume_atual );
+    }
+  });
+  $( "#mute" ).on( "click", function() {
+      $('#controle_volume').slider( "value", 0   );
+    });
+});
+
+/ Audio player
+//
+var meu_objeto_media = new Media( "http://stm10.xcast.com.br:8234/;", onSuccess, onError);
+
+
+// Play audio
+meu_objeto_media.play();
+</script>
+
+
+        <div id="pLAY-button-bar2" class="button-bar">
+    <div id="controles">
+      <div id="controles_botoes">
+       
+        <img align="middle" height="35" id="btn_play_pause" src="img/pause.png" style="cursor:pointer" width="35" />
+      </div>
+      <div id="album">
+        <div id="musica_capa"></div>
+         <label id="musica_titulo"></label>
+      </div>
+    </div>
+
+
+
+<style type="text/css">
+         div#album span {
+        font-size: 14px;
+        float: left;
+        position: relative;
+        margin: 34px 2px 0px 12px;
+    }
+
+    </style>
+
+<script type="text/javascript">
+
+
+    // Atualizar informaÃ§Ãµes do streaming
+
+
+    confere="null";
+    rodando ="0";
+
+    function recursively_ajax()
+      {
+
+        $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "http://xcast.com.br/api-json/ODIzNCsw",
+                contentType: "charset=ISO-8859-1",
+                success: function(data) {
+
+                    var musica_atual = data.musica_atual; // Mostra a música atual
+                    var capa_musica = data.capa_musica;// Mostra a capa atual
+                    var ouvintes_conectados = data.ouvintes_conectados; // Mostra total de ouvintes conectados
+                      
+                    rodando = musica_atual;
+                      if(confere != rodando){  
+                       var  stringMusica = musica_atual;
+                       var  resultado = stringMusica.substring(stringMusica.indexOf("-") + 1);             
+
+                               document.getElementById("musica_titulo").innerHTML=resultado;
+                               document.getElementById("musica_capa").innerHTML="<img src="+capa_musica+"/>";
+
+                        //alert(capa_musica);
+                            if(capa_musica=="[object Object]"){
+                             document.getElementById("musica_capa").innerHTML='<img src="img/logomarca.png" />';
+                             // alert("vazio");
+                            }
+                        
+                             confere = rodando;
+                             console.log(capa_musica).value;
+                        }
+      
+              }
+          });
+        
+          
+       }
+
+
+    // Botao play/pause
+    $(document).ready(function () {
+        var is_play = true;
+
+        $('#btn_play_pause').click(function () {
+            if (is_play){
+                is_play  = false;
+                $(this).attr("src", "img/play.png");
+          document.getElementById('player_html5').pause();
+            } else {
+                $(this).attr("src", "img/pause.png");
+          document.getElementById('player_html5').play();
+          is_play  = true;
+            }
+        });
+            
+});
+setInterval(recursively_ajax, 500);
+
+    </script>
+    
+
+</div>
+    
+<!--fim radio-->
+        </div>
+      </form>
+    </div>
+  </ion-content>
+</ion-view>
